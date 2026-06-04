@@ -1,7 +1,6 @@
 package com.ucsal.estoque.service;
 
 import com.ucsal.estoque.client.AtendimentoClient;
-import com.ucsal.estoque.dto.AtendimentoDTO;
 import com.ucsal.estoque.dto.MedicacaoDTORequest;
 import com.ucsal.estoque.entity.Medicacao;
 import com.ucsal.estoque.enums.Status;
@@ -104,7 +103,7 @@ public class MedicacaoService {
         Medicacao medicacao = repository.findById(id)
                 .orElseThrow(() -> new ItemNaoEncontrado("Medicacao nao encontrada"));
 
-        if (!atendimentoClient.buscarPorMedicacao(id).isEmpty()) {
+        if (!atendimentoClient.buscarPorMedicacao(id)) {
             throw new ExclusaoItemUtilizadoException("Medicacao ja foi utilizada em atendimentos");
         }
 

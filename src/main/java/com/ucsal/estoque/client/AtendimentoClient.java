@@ -15,13 +15,14 @@ public class AtendimentoClient {
         this.webClient = webClient;
     }
 
-    public List<AtendimentoDTO> buscarPorMedicacao(Long medicacaoId) {
+    public boolean buscarPorMedicacao(Long medicacaoId) {
 
-        return webClient.get()
-                .uri("http://localhost:8085/atendimentos/medicacao/{id}", medicacaoId)
+        Boolean result = webClient.get()
+                .uri("http://localhost:8085/atendimentos/medicacao/{id}/exists", medicacaoId)
                 .retrieve()
-                .bodyToFlux(AtendimentoDTO.class)
-                .collectList()
+                .bodyToMono(Boolean.class)
                 .block();
+
+        return Boolean.TRUE.equals(result);
     }
 }
