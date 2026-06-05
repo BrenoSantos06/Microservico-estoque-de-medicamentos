@@ -58,4 +58,20 @@ public class MedicacaoController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err.getMessage());
         }
     }
+
+    @PatchMapping("/{id}/consumir-estoque")
+    public ResponseEntity<?> consumirEstoque(
+            @PathVariable Long id,
+            @RequestBody MedicacaoDTORequest request
+    ) {
+        return ResponseEntity.ok(
+                medicacaoService.consumirEstoque(id, request.quantidadeEstoque())
+        );
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> excluir(@PathVariable Long id) {
+        medicacaoService.excluir(id);
+        return ResponseEntity.noContent().build();
+    }
 }

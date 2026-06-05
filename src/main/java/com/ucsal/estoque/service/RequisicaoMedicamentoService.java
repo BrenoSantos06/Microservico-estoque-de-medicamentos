@@ -8,6 +8,7 @@ import com.ucsal.estoque.dto.RequisicaoMedicacaoDTORequest;
 import com.ucsal.estoque.dto.RequisicaoMedicacaoDTOResponse;
 import com.ucsal.estoque.exception.ProfissionalNaoEncontradoException;
 import com.ucsal.estoque.mapper.RequisicaoMedicacaoMapper;
+import com.ucsal.estoque.repository.MedicacaoRepository;
 import com.ucsal.estoque.repository.RequisicaoMedicacaoRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,12 +22,14 @@ public class RequisicaoMedicamentoService {
     private final RequisicaoMedicacaoRepository repository;
     private final RequisicaoMedicacaoMapper mapper;
     private final ProfissionalClient profissionalClient;
+    private final MedicacaoRepository medicacaoRepository;
 
     public RequisicaoMedicamentoService(RequisicaoMedicacaoRepository repository,
-                                        RequisicaoMedicacaoMapper mapper, ProfissionalClient profissionalClient) {
+                                        RequisicaoMedicacaoMapper mapper, ProfissionalClient profissionalClient, MedicacaoRepository medicacaoRepository) {
         this.repository = repository;
         this.mapper = mapper;
         this.profissionalClient = profissionalClient;
+        this.medicacaoRepository = medicacaoRepository;
     }
 
     @Transactional
@@ -41,10 +44,11 @@ public class RequisicaoMedicamentoService {
         }
 
 
-        repository.findById(dto.medicacaoId())
+        medicacaoRepository.findById(dto.medicacaoId())
                 .orElseThrow(() -> new ItemNaoEncontrado("Medicação não encontrada"));
 
-        profissionalClient.findById(dto.profissionalId());
+        profissionalClient.findById(dto.profissionalId())
+                .orElseThrow(() -> new ProfissionalNaoEncontradoException("Profissional não encontrado"));
 
         RequisicaoMedicacao entity = new RequisicaoMedicacao();
         entity.setMedicamentoId(dto.medicacaoId());
